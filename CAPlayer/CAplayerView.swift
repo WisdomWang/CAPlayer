@@ -30,7 +30,7 @@ class CAplayerView: UIView {
     var url:URL?
     
     var timeLabel:UILabel!  //视频时间
-    var slider:UISlider!    //进度条
+    var slider:UISlider!    //视频进度条
     var sliding = false
     var progressView:UIProgressView!  //缓冲条
     var playBtn:UIButton!    //播放暂停按钮
@@ -211,7 +211,6 @@ class CAplayerView: UIView {
             let y = fabs(veloctyPoint.y)
             if x > y {
                 direction = .leftOrRight
-                player.pause()
             }
             else if x < y {
                 
@@ -231,7 +230,7 @@ class CAplayerView: UIView {
                 
                 if isVolume == false && offsetPoint.y > 0 {
                     
-                    var newBrightness = UIScreen.main.brightness - fabs(offsetPoint.y/self.frame.size.height)
+                    var newBrightness = UIScreen.main.brightness - 0.01
                     if newBrightness < 0 {
                         newBrightness = 0
                     }
@@ -239,7 +238,7 @@ class CAplayerView: UIView {
                 }
               else  if isVolume == false && offsetPoint.y < 0 {
                     
-                    var newBrightness = UIScreen.main.brightness - fabs(offsetPoint.y/self.frame.size.height)
+                    var newBrightness = UIScreen.main.brightness + 0.01
                     if newBrightness > 1 {
                         newBrightness = 1
                     }
@@ -247,7 +246,7 @@ class CAplayerView: UIView {
                 }
               else  if isVolume == true && offsetPoint.y > 0 {
                     
-                    var newVolume = UIScreen.main.brightness - fabs(offsetPoint.y/self.frame.size.height)
+                    var newVolume = player.volume - 0.01
                     if newVolume < 0 {
                         newVolume = 0
                     }
@@ -255,7 +254,7 @@ class CAplayerView: UIView {
                 }
                 else  if isVolume == true && offsetPoint.y < 0 {
                     
-                    var newVolume = UIScreen.main.brightness - fabs(offsetPoint.y/self.frame.size.height)
+                    var newVolume = player.volume + 0.01
                     if newVolume > 1 {
                         newVolume = 1
                     }
@@ -266,7 +265,7 @@ class CAplayerView: UIView {
             }
             else if direction == .leftOrRight {
         
-                
+                //可在这里添加左右滑动改变视频进度的代码
             }
             
             break
@@ -279,7 +278,6 @@ class CAplayerView: UIView {
             }
             else if direction == .leftOrRight {
                 
-                player.play()
             }
             
             break
@@ -289,7 +287,6 @@ class CAplayerView: UIView {
         }
         
         pan.setTranslation(CGPoint.zero, in: self)
-        
         
     }
     
@@ -356,6 +353,7 @@ class CAplayerView: UIView {
         // 监听状态改变
         playerItem.addObserver(self, forKeyPath: "status", options: .new, context: nil)
         player = AVPlayer(playerItem: playerItem)
+        player.volume = 0.5
         playerLayer = AVPlayerLayer(player: player)
         playerLayer?.videoGravity = .resizeAspectFill
         playerLayer?.contentsScale = UIScreen.main.scale
