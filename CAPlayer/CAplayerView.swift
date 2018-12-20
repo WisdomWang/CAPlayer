@@ -22,7 +22,7 @@ enum Direction {
 class CAplayerView: UIView {
 
     var direction:Direction!
-    var isVolume = false
+    var isVolume = false  //是否为改变声音手势
     
     var playerLayer:AVPlayerLayer?
     var playerItem:AVPlayerItem!
@@ -39,8 +39,8 @@ class CAplayerView: UIView {
     var fullScreenBtn:UIButton!     //全屏按钮
     var titleLabel:UILabel!   //标题
     
-    var oldConstriants:Array<NSLayoutConstraint>!
-    var isFullScreen:Bool!
+    var oldConstriants:Array<NSLayoutConstraint>!   //旧的布局
+    var isFullScreen:Bool!      //是否全屏
     
     var link:CADisplayLink!     //定时器
     
@@ -181,10 +181,12 @@ class CAplayerView: UIView {
     //MARK:----------添加手势
     func setupTap () {
         
+        //是否全屏手势（双击手势）
         let fullOrNotFullScreenTap = UITapGestureRecognizer(target: self, action: #selector(tapChangeScreen))
         fullOrNotFullScreenTap.numberOfTapsRequired = 2
         self.addGestureRecognizer(fullOrNotFullScreenTap)
         
+        //控件是否隐藏（单击手势）
         let disOrNotdisAppearTap = UITapGestureRecognizer(target: self, action: #selector(disOrNotDisAppear))
         disOrNotdisAppearTap.numberOfTapsRequired  = 1
         self.addGestureRecognizer(disOrNotdisAppearTap)
@@ -192,6 +194,7 @@ class CAplayerView: UIView {
         //这行很关键，意思是只有当没有检测到双击手势 或者 检测双击手势失败，s单击手势才有效
         disOrNotdisAppearTap.require(toFail: fullOrNotFullScreenTap)
         
+        //滑动手势
         let pan  = UIPanGestureRecognizer(target: self, action: #selector(changeVoiceOrLightOrProgress(pan:)))
         self.addGestureRecognizer(pan)
         pan.delegate = self as? UIGestureRecognizerDelegate
